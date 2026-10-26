@@ -1,66 +1,603 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nouvelle adresse</title>
-<style>
-body {
-  margin: 0;
-  background: #171717;
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: center;
-}
-header {
-  background: #222;
-  padding: 10px;
-}
-.logo {
-  width: 180px;
-  height: auto;
-}
-.banner {
-  width: 100%;
-  max-height: 220px;
-  object-fit: cover;
-}
-h1 { color: #ff8000; }
-a {
-  display: inline-block;
-  background: #ff8000;
-  color: black;
-  padding: 12px 22px;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 4px;
-}
-p { color: #ccc; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information Adresse - Portal Info</title>
+    <style>
+        /* RESET & BASE */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #E5E6E1;
+            color: #333333;
+            font-size: 14px;
+            line-height: 1.4;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button, input, select {
+            font-family: inherit;
+        }
+
+        /* UTILS */
+        .bold { font-weight: 700; }
+        .semi-bold { font-weight: 600; }
+        .red-text { color: #A94442; }
+
+        /* CONTAINER GLOBAL */
+        .site-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #E5E6E1;
+        }
+
+        /* 1. BARRE SUPÉRIEURE */
+        .top-bar {
+            height: 43px;
+            background-color: #97BF12;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 18px;
+        }
+
+        .top-bar-message {
+            font-size: 15px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .top-bar-icons {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .top-bar-icon-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 0 12px;
+            border-left: 1px dotted rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: background-color 150ms ease;
+        }
+
+        .top-bar-icon-item:hover {
+            background-color: #283305;
+        }
+
+        .top-bar-icon-item svg {
+            width: 28px;
+            height: 28px;
+            fill: #FFFFFF;
+        }
+
+        /* 2. BANNIÈRE & LOGO */
+        .banner {
+            height: 175px;
+            width: 100%;
+            background-image: url('https://www.wawacity.wine/assets/images/header.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .logo {
+            margin-left: 23px;
+            margin-top: 30px;
+            width: 260px;
+            height: 90px;
+            background-image: url('https://www.wawacity.wine/assets/images/tech.png');
+            background-size: contain;
+            background-position: left center;
+            background-repeat: no-repeat;
+            display: block;
+        }
+
+        /* 3. BARRE DE RECHERCHE */
+        .search-bar {
+            min-height: 60px;
+            margin-top: 7px;
+            background-color: #97BF12;
+            border-bottom: 4px solid #E4F7A6;
+            display: flex;
+            align-items: center;
+            padding: 8px 18px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            width: 300px;
+            height: 43px;
+            background-color: #FFFFFF;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            padding: 0 12px;
+            font-size: 18px;
+            color: #333333;
+            outline: none;
+        }
+
+        .search-select {
+            width: 180px;
+            height: 43px;
+            background-color: #FFFFFF;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            padding: 0 10px;
+            font-size: 16px;
+            color: #333333;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .search-button {
+            width: 43px;
+            height: 43px;
+            background-color: #283305;
+            border: none;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 150ms ease;
+        }
+
+        .search-button:hover {
+            background-color: #1a2203;
+        }
+
+        .search-button svg {
+            width: 24px;
+            height: 24px;
+            fill: #FFFFFF;
+        }
+
+        /* 4. NAVIGATION PRINCIPALE */
+        .main-nav {
+            min-height: 52px;
+            background-color: #97BF12;
+            border-left: 5px solid #E4F7A6;
+            border-bottom: 4px solid #E4F7A6;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            overflow-x: auto;
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            font-size: 19px;
+            font-weight: 600;
+            color: #FFFFFF;
+            border-radius: 2px;
+            transition: background-color 150ms ease;
+        }
+
+        .nav-item a:hover, .nav-item.active a {
+            background-color: #283305;
+        }
+
+        .home-icon-svg {
+            width: 22px;
+            height: 22px;
+            fill: #FFFFFF;
+            margin-right: 6px;
+        }
+
+        /* ZONE PRINCIPALE DE CONTENU */
+        .main-content {
+            padding-top: 20px;
+            padding-left: 18px;
+            padding-right: 18px;
+            padding-bottom: 30px;
+        }
+
+        /* ALERTE DE REDIRECTION / NOUVELLE ADRESSE */
+        .alert-box {
+            background-color: #FFFFFF;
+            border: 2px solid #A94442;
+            border-radius: 2px;
+            padding: 18px;
+            margin-bottom: 25px;
+        }
+
+        .alert-title {
+            color: #A94442;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-title svg {
+            width: 22px;
+            height: 22px;
+            fill: #A94442;
+        }
+
+        .url-box {
+            background-color: #E4F7A6;
+            border: 1px solid #97BF12;
+            padding: 12px 15px;
+            margin: 12px 0;
+            font-size: 18px;
+            font-weight: bold;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .url-link {
+            color: #283305;
+            text-decoration: underline;
+        }
+
+        .btn-visit {
+            background-color: #97BF12;
+            color: #FFFFFF;
+            padding: 8px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background-color 150ms ease;
+            display: inline-block;
+        }
+
+        .btn-visit:hover {
+            background-color: #283305;
+        }
+
+        /* 5. LIGNES DE CATÉGORIES */
+        .category-header {
+            min-height: 46px;
+            background-color: #E4F7A6;
+            color: #283305;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 0 22px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #97BF12;
+            margin-top: 15px;
+        }
+
+        .category-header-icon {
+            margin-right: 8px;
+            color: #97BF12;
+            font-size: 14px;
+        }
+
+        /* 6. LIGNES DE CONTENU */
+        .content-row {
+            min-height: 48px;
+            background-color: #FFFFFF;
+            font-size: 16px;
+            padding-top: 11px;
+            padding-bottom: 11px;
+            padding-left: 48px;
+            padding-right: 24px;
+            border-bottom: 1px solid #F2FBD5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .content-row:hover {
+            background-color: #FAFDF5;
+        }
+
+        .content-label {
+            color: #333333;
+        }
+
+        .content-val {
+            color: #666666;
+            font-size: 14px;
+        }
+
+        /* BLOC MENTION / AVERTISSEMENT */
+        .disclaimer-block {
+            background-color: #FFFFFF;
+            border: 1px solid #D6D7D1;
+            padding: 18px;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .disclaimer-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 8px;
+        }
+
+        /* 7. PIED DE PAGE */
+        .footer {
+            background-color: #283305;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 20px 15px;
+            font-size: 13px;
+            margin-top: 20px;
+            border-top: 4px solid #97BF12;
+        }
+
+        .footer p {
+            margin: 4px 0;
+        }
+
+        /* ACCESSIBILITÉ ET PRÉFÉRENCES */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        /* 8. VERSION MOBILE (< 700px) */
+        @media (max-width: 700px) {
+            .top-bar {
+                font-size: 14px;
+            }
+            .top-bar-message {
+                font-size: 13px;
+            }
+            .top-bar-icon-item svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .banner {
+                height: 145px;
+            }
+
+            .logo {
+                width: 200px;
+                height: 70px;
+                margin-left: 15px;
+                margin-top: 20px;
+            }
+
+            .search-bar {
+                padding: 10px;
+            }
+
+            .search-input {
+                width: 100%;
+                font-size: 16px;
+            }
+
+            .search-select {
+                flex-grow: 1;
+                font-size: 15px;
+            }
+
+            .main-nav {
+                min-height: 44px;
+            }
+
+            .nav-item a {
+                font-size: 15px;
+                padding: 8px 10px;
+            }
+
+            .main-content {
+                padding: 12px 9px;
+            }
+
+            .category-header {
+                font-size: 15px;
+                padding: 0 12px;
+            }
+
+            .content-row {
+                font-size: 14px;
+                padding-left: 15px;
+                padding-right: 15px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .url-box {
+                font-size: 15px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <img class="logo"
-       src="https://www.wawacity.wine/assets/images/tech.png"
-       alt="Logo">
-</header>
+<div class="site-container">
 
-<img class="banner"
-     src="https://www.wawacity.wine/assets/images/header.jpg"
-     alt="Bannière">
+    <!-- 1. BARRE SUPÉRIEURE -->
+    <header class="top-bar">
+        <div class="top-bar-message">
+            Information Portail – Mise à jour des adresses répertoriées
+        </div>
+        <div class="top-bar-icons">
+            <div class="top-bar-icon-item" title="Accueil">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            </div>
+            <div class="top-bar-icon-item" title="Informations">
+                <svg viewBox="0 0 24 24"><path d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2h-2v-2z"/></svg>
+            </div>
+            <div class="top-bar-icon-item" title="Contact">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </div>
+        </div>
+    </header>
 
-<h1>Nouvelle adresse</h1>
-<p>Retrouvez le site via le lien ci-dessous.</p>
+    <!-- 2. BANNIÈRE & LOGO -->
+    <div class="banner">
+        <a href="#" class="logo" aria-label="Logo Portail Info"></a>
+    </div>
 
-<a href="https://movix-cxpr.onrender.com/#">
-  Accéder au site
-</a>
+    <!-- 3. BARRE DE RECHERCHE -->
+    <section class="search-bar">
+        <input type="text" class="search-input" placeholder="Rechercher un lien ou sujet..." aria-label="Champ de recherche">
+        <select class="search-select" aria-label="Catégorie de recherche">
+            <option value="all">Toutes les catégories</option>
+            <option value="links">Adresses & URLs</option>
+            <option value="news">Actualités</option>
+            <option value="guides">Guides</option>
+        </select>
+        <button class="search-button" aria-label="Lancer la recherche">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        </button>
+    </section>
 
-<p style="font-size:12px;color:#777">
-  Page indépendante non officielle.
-</p>
+    <!-- 4. NAVIGATION PRINCIPALE -->
+    <nav class="main-nav">
+        <ul class="nav-list">
+            <li class="nav-item active">
+                <a href="#">
+                    <svg class="home-icon-svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                    Accueil
+                </a>
+            </li>
+            <li class="nav-item"><a href="#">Annuaires</a></li>
+            <li class="nav-item"><a href="#">Vérifications</a></li>
+            <li class="nav-item"><a href="#">Sécurité Web</a></li>
+            <li class="nav-item"><a href="#">Aide & FAQ</a></li>
+        </ul>
+    </nav>
+
+    <!-- ZONE PRINCIPALE DE CONTENU -->
+    <main class="main-content">
+
+        <!-- ALERTE / INFORMATION D'ADRESSE -->
+        <div class="alert-box">
+            <div class="alert-title">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                Communication importante : Nouvelle adresse signalée
+            </div>
+            <p style="margin-bottom: 10px; font-size: 15px;">
+                Une nouvelle adresse a été communiquée concernant la plateforme <strong>Movix</strong>. 
+                Veuillez prendre note du lien ci-dessous transmis pour consultation.
+            </p>
+
+            <div class="url-box">
+                <div>
+                    <span>Adresse à vérifier : </span>
+                    <a href="https://movix-cxpr.onrender.com/#" target="_blank" rel="noopener noreferrer" class="url-link">https://movix-cxpr.onrender.com/#</a>
+                </div>
+                <a href="https://movix-cxpr.onrender.com/#" target="_blank" rel="noopener noreferrer" class="btn-visit">Accéder au site</a>
+            </div>
+
+            <p style="font-size: 13px; color: #666666;">
+                <span class="red-text semi-bold">Remarque :</span> Ce lien est partagé à titre d'information et de vérification par les utilisateurs.
+            </p>
+        </div>
+
+        <!-- 5. CATÉGORIES ET 6. LIGNES DE CONTENU -->
+        
+        <div class="category-header">
+            <span class="category-header-icon">▲</span> Fiche récapitulative de l'adresse
+        </div>
+
+        <div class="content-row">
+            <span class="content-label bold">Nom du service concerné</span>
+            <span class="content-val">Movix</span>
+        </div>
+
+        <div class="content-row">
+            <span class="content-label bold">Nouvelle URL communiquée</span>
+            <span class="content-val"><a href="https://movix-cxpr.onrender.com/#" target="_blank" class="red-text">https://movix-cxpr.onrender.com/#</a></span>
+        </div>
+
+        <div class="content-row">
+            <span class="content-label bold">Hébergement / Domaine</span>
+            <span class="content-val">onrender.com (Render Cloud Platform)</span>
+        </div>
+
+        <div class="content-row">
+            <span class="content-label bold">Statut du lien</span>
+            <span class="content-val" style="color: #283305; font-weight: 600;">En ligne / Signalé</span>
+        </div>
+
+        <div class="category-header">
+            <span class="category-header-icon">▲</span> Recommandations de sécurité
+        </div>
+
+        <div class="content-row">
+            <span class="content-label">Vérification HTTPS</span>
+            <span class="content-val">Connexion sécurisée via le protocole SSL/TLS</span>
+        </div>
+
+        <div class="content-row">
+            <span class="content-label">Prudence lors de la navigation</span>
+            <span class="content-val">Ne partagez jamais vos identifiants ou informations personnelles sensibles</span>
+        </div>
+
+        <div class="content-row">
+            <span class="content-label">Blocage des publicités</span>
+            <span class="content-val">Il est recommandé d'utiliser un bloqueur de publicités et un antivirus à jour</span>
+        </div>
+
+        <!-- BLOC AVERTISSEMENT LEGAL / MENTION -->
+        <div class="disclaimer-block">
+            <div class="disclaimer-title">Mentions d'information et neutralité</div>
+            <p>
+                Ce site web est un portail d'information neutre et indépendant. Il n'est pas le site officiel de WawaCity ni de la plateforme mentionnée.
+                L'URL communiquée (<code>https://movix-cxpr.onrender.com/#</code>) est présentée ici sous réserve de vérification par les utilisateurs, sans qu'aucune garantie ne soit apportée quant à son caractère officiel, sa pérennité ou sa sécurité. L'utilisateur demeure seul responsable de sa navigation sur internet.
+            </p>
+        </div>
+
+    </main>
+
+    <!-- 7. PIED DE PAGE -->
+    <footer class="footer">
+        <p><strong>Portail d'Information Web</strong> &copy; 2026 - Tous droits réservés.</p>
+        <p>Design compact et fonctionnel - Information libre et indépendante.</p>
+    </footer>
+
+</div>
 
 </body>
 </html>
